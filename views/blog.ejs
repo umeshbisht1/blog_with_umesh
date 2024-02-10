@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+    <%- include('./partials/link') %>
+  </head>
+  <body>
+    <%- include('./partials/navbar') %>
+    <div class="container" style="margin-bottom: 20px">
+      <h1 class="mt-3" style="text-align: center"><%= blog.title %></h1>
+      <div
+        class="container"
+        style="display: flex; gap: 5%; align-items: center; flex-wrap: wrap"
+      >
+        <img
+          src="<%= blog.coverImageUrl %>"
+          alt=""
+          width="60%"
+          height="50%"
+          class="mt-4"
+        />
+        <pre class="mt-4"><%= blog.body %></pre>
+      </div>
+      <div class="container mt-4" style="display: flex; gap: 20px">
+        <img
+          src="<%= blog.createdBy.profileImageUrl %>"
+          alt=""
+          width="50px"
+          height="50px"
+          style="border-radius: 45px"
+        />
+        <h1><%= blog.createdBy.firstName %></h1>
+      </div>
+
+      <div class="container mt-4">
+        <h1>Comment...(<%= comment.length %>)</h1>
+        <% if (locals.user) { %>
+        <form
+          action="/blog/comment/<%= blog._id %>"
+          method="POST"
+          style="text-align: center"
+        >
+          <div class="col-sm-10" style="display: flex; gap: 50px">
+            <input
+              type="text"
+              class="form-control"
+              id="content"
+              placeholder="Enter your comment..."
+              name="content"
+            />
+            <button class="btn btn-primary" type="submit">Comment</button>
+          </div>
+        </form>
+        <% } %>
+      </div>
+      <div class="mt-3">
+        <% comment.forEach(comment => { %>
+        <div class="div" style="display: flex; gap: 20px">
+          <img
+            src="<%= comment.createdBy.profileImageUrl %>"
+            alt=""
+            height="50px"
+            width="50px"
+            style="border-radius: 45px"
+          />
+          <h1><%= comment.createdBy.firstName %></h1>
+          
+        </div>
+        <pre><%= comment.content %></pre>
+        <% }) %>
+      </div>
+    </div>
+    <%- include('./partials/script') %>
+  </body>
+</html>

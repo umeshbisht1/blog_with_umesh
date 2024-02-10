@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <%- include('./partials/link') %>
+</head>
+<body>
+    <%- include('./partials/navbar') %>
+   <div class="container mt-3">
+
+    <form action="/blog" method="POST" enctype="multipart/form-data" >
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Title</label>
+            <input class="form-control" type="text" id="formFile" name="title">
+          </div>
+          <label for="floatingTextarea">Body...</label>
+          <div class="form-floating">
+            
+            <textarea class="form-control"  id="floatingTextarea" name="body"></textarea>
+            
+          </div>
+          
+          <div>
+            <label for="formFileLg" class="form-label">CoverImage</label>
+            <input class="form-control form-control-lg" id="formFileLg" type="file" name="coverImageUrl">
+          </div>
+          <div class="mt-5" style="text-align: center;">
+            <button type="submit" class="btn btn-primary" >Add_Blog</button>
+          </div>
+    </form>
+   </div>
+    <%- include('./partials/script') %>
+</body>
+</html>
