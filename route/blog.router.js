@@ -4,12 +4,15 @@ import multer from "multer";
 import path from "path";
 import { Blog } from "../models/blog.model.js";
 import { Comment } from "../models/comment.model.js";
+import { cloudinaryupdate } from "../utils/uploadcloudniary.js";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    
     cb(null, path.resolve(`./public/uploads`));
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
+    
+    cb(null, file.originalname);
   },
 });
 
@@ -23,20 +26,38 @@ router
   .route("/")
   .post(upload.single("coverImageUrl"), async (req, res, next) => {
     if (req.user) {
-      const { title, body } = req.body;
-      try {
-        const blog = await Blog.create({
-          title,
-          body,
-          createdBy: req.user._id,
-          coverImageUrl: `/uploads/${req.file.filename}`,
-        });
-        return res.redirect("/");
-      } catch (error) {
+      if (req.file && req.file.path) {
+        const coverImageUrl = await cloudinaryupdate(req.file.path);
+        //if the file is sucesfully uploaded:
+        if (coverImageUrl) {
+          const { title, body } = req.body;
+          try {
+            const blog = await Blog.create({
+              title,
+              body,
+              createdBy: req.user._id,
+              coverImageUrl:coverImageUrl.url
+            });
+            return res.redirect("/");
+          } catch (error) {
+            return res.redirect("/blog/add-new");
+          }
+        }
+        // if error:
+        else{
+          return res.render("addblog", {
+            error: "error occured in uploading the image",
+          });
+        }
         
-        return res.redirect("/add-new");
       }
-    } else
+      // if path is not availble
+      else{
+        return res.render("addblog", {
+          error: "error occured in uploading the image",
+        });
+      }
+    } else // this is because of user i s not logged in 
       return res.render("signin", {
         error: "u are not a logged in user",
       });
@@ -44,33 +65,29 @@ router
 router.route("/:id").get(async (req, res, next) => {
   try {
     const blogs = await Blog.findById(req.params.id).populate("createdBy");
-   const comment=await Comment.find({blogId:req.params.id}).populate("createdBy");
-   
+    const comment = await Comment.find({ blogId: req.params.id }).populate(
+      "createdBy"
+    );
+
     return res.render("blog", {
       user: req.user,
       blog: blogs,
-      comment
+      comment,
     });
   } catch (error) {
-    
     return res.render("home", {
       error: "error in getting the blog details",
     });
   }
 });
-router.route("/comment/:_id").post(async(req,res,next)=>{
-    
-    try {
-        const comment=await Comment.create({
-            content:req.body.content,
-            blogId:req.params._id,
-            createdBy:req.user._id
-        })
-       
-    } catch (error) {
-       
-        
-    }
-    return res.redirect(`/blog/${req.params._id}`)
-})
+router.route("/comment/:_id").post(async (req, res, next) => {
+  try {
+    const comment = await Comment.create({
+      content: req.body.content,
+      blogId: req.params._id,
+      createdBy: req.user._id,
+    });
+  } catch (error) {}
+  return res.redirect(`/blog/${req.params._id}`);
+});
 export default router;
