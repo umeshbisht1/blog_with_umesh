@@ -15,18 +15,23 @@
         style="display: flex; flex-wrap: wrap; gap: 30px"
       >
         <% blog.forEach(card => { %>
-        <div class="card" style="width: 18rem">
+        <div class="card" style="width: 18rem; height: fit-content; margin-top: 2%;">
           <img
-            src="<%= card.coverImageUrl %>"
-            class="card-img-top"
-            alt="..."
-            style="height: 200px"
-          />
-          <div class="card-body">
-            <h5 class="card-title"><%= card.title %></h5>
+                    src="<%= card.coverImageUrl %>"
+                    class="card-img-top"
+                    alt="..."
+                    style="height: 150px;
+                    margin: 10px;
+                    width: 90%;
+                    object-fit: fill;"
 
-            <a href="/blog/<%= card._id %>" class="btn btn-primary">View</a>
-          </div>
+                  />
+                  <div class="card-body" style="display: flex;
+                  flex-direction: column;
+                  justify-content: center;">
+                    <h5 class="card-title" style="text-align: center;"><%= card.title %></h5>
+                    <a href="/blog/<%= card._id %>" class="btn btn-primary">View</a>
+                  </div>
         </div>
         <% }) %>
       </div>

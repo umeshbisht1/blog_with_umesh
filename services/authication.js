@@ -5,7 +5,7 @@ export const createtoken = (user) => {
     {
       _id: user._id,
       email: user.email,
-      profilePicture: user.profileImageUrl,
+      profileImageUrl: user.profileImageUrl,
       role:user.role
     },
     secret

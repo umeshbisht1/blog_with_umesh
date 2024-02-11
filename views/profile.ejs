@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+    <%- include('./partials/link') %>
+  </head>
+  <body>
+    <%- include('./partials/navbar') %> 
+    <!-- //user details... -->
+    <div
+      class="container"
+      style="display: flex; height: 80vh; width: 100vw; gap: 10px;flex-wrap: wrap;"
+    >
+      <div class="" style="flex: 1; background: #dadada; display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;">
+        <div
+          class=""
+          style="
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+          "
+        >
+          <img
+            src="<%= user.profileImageUrl %>"
+            alt=""
+            style="height: 100px; width: 100px; border-radius: 50px"
+          />
+          <h1><%= user.firstName %></h1>
+        </div>
+        <div class="" style="display: flex; justify-content: space-evenly">
+          <h2><%= user.email%></h2>
+          <button class="btn btn-primary"><%= user.role %></button>
+        </div>
+        <div class="" style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+            <a href="/blog/add-new" class="btn btn-primary" style="width: 50%;">Add new_blog</a>
+        <a href="/user/logout" class="btn btn-primary" style="width: 50%;">Logout</a>
+        <a href="#" class="btn btn-primary" style="width: 50%;">Delete</a>
+        </div>
+       
+      </div>
+      <!-- //user created blog -->
+      <div
+        class=""
+        style="
+          flex: 2;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
+          justify-content: space-around;
+          flex-wrap: wrap;
+        "
+      >
+        <% blog.forEach(card => { %>
+        <div
+          class="card"
+          style="width: 18rem; height: fit-content; margin-top: 2%"
+        >
+          <img
+            src="<%= card.coverImageUrl %>"
+            class="card-img-top"
+            alt="..."
+            style="height: 150px; margin: 10px; width: 90%; object-fit: fill"
+          />
+          <div
+            class="card-body"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+            "
+          >
+            <h5 class="card-title" style="text-align: center">
+              <%= card.title %>
+            </h5>
+            <a href="/blog/<%= card._id %>" class="btn btn-primary">View</a>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+    <%- include('./partials/script') %>
+  </body>
+</html>
