@@ -17,9 +17,16 @@
         <img
           src="<%= blog.coverImageUrl %>"
           alt=""
-          width="60%"
-          height="50%"
           class="mt-4"
+          style="
+            height: 50vh;
+            width: 25vw;
+            object-fit: fill;
+            background-position: top;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 10px;
+          "
         />
         <pre class="mt-4"><%= blog.body %></pre>
       </div>
@@ -58,6 +65,7 @@
       <div class="mt-3">
         <% comment.forEach(comment => { %>
         <div class="div" style="display: flex; gap: 20px">
+         
           <img
             src="<%= comment.createdBy.profileImageUrl %>"
             alt=""
@@ -66,9 +74,19 @@
             style="border-radius: 45px"
           />
           <h1><%= comment.createdBy.firstName %></h1>
-          
         </div>
-        <pre><%= comment.content %></pre>
+        <div
+          class=""
+          style="display: flex; width: 100%; justify-content: space-between"
+        >
+          <pre><%= comment.content %></pre>
+
+          <div class="" style="display: flex; gap: 4px">
+            <li style="list-style: none;"><a href="" style="text-decoration: none;">👍</a></li>
+            <li style="list-style:  none;"><a style="text-decoration: none;" href="">👎</a></li>
+            <li style="list-style:none ;"><a  style="text-decoration: none;" href="">❌</a></li>
+          </div>
+        </div>
         <% }) %>
       </div>
     </div>

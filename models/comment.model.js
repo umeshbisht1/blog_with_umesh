@@ -12,6 +12,14 @@ const commentschema= new Schema({
     blogId:{
         type:Schema.Types.ObjectId,
         ref:"Blog"
+    },
+    liked:{
+        type:Number,
+        default:0
+    },
+    disliked:{
+        type:Number,
+        default:0
     }
 },{timestamps:true})
 export const Comment =mongoose.model("Comment",commentschema)

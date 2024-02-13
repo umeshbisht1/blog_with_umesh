@@ -3,7 +3,9 @@ import { signin, signup } from "../controller/user.controller.js";
 import { User } from "../models/user.model.js";
 import { createtoken } from "../services/authication.js";
 import { Blog } from "../models/blog.model.js";
+import { Comment } from "../models/comment.model.js";
 const router = express.Router();
+//signin
 router
   .route("/signin")
   .get(signin)
@@ -34,6 +36,7 @@ router
       });
     }
   });
+//signup
 router.route("/signup").get(signup);
 router.route("/signup").post(async (req, res, next) => {
   const { firstName, email, password } = req.body;
@@ -48,22 +51,39 @@ router.route("/signup").post(async (req, res, next) => {
     return res.redirect("signin");
   } catch (error) {}
 });
+//logout
 router.route("/logout").get(async (req, res, next) => {
   res.clearCookie("token").redirect("/");
 });
+//userprofile
 router.route("/getuserprofile").get(async (req, res, next) => {
   if (!req.user)
     return res.render("signin", {
       error: "u are not logged in ",
     });
-    try {
-      const user=await User.findById(req.user._id);
-      const blog=await Blog.find({createdBy:req.user._id});
-      return res.render("profile",{
-        user,blog
-      })
-    } catch (error) {
-      return res.redirect("/");
-    }
+  try {
+    const user = await User.findById(req.user._id);
+    const blog = await Blog.find({ createdBy: req.user._id });
+    return res.render("profile", {
+      user,
+      blog,
+    });
+  } catch (error) {
+    return res.redirect("/");
+  }
+});
+router.route("/delete").get(async (req, res, next) => {
+  try {
+    await Comment.deleteMany({ createdBy: req.user._id });
+    await Blog.deleteMany({ createdBy: req.user._id });
+    await User.deleteOne({ _id: req.user._id });
+
+    return res.clearCookie("token").redirect("/");
+  } catch (error) {
+    console.log(error.message);
+    return res.render("home", {
+      error: "error occured in deleting the user",
+    });
+  }
 });
 export default router;
