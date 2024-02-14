@@ -90,4 +90,83 @@ router.route("/comment/:_id").post(async (req, res, next) => {
   } catch (error) {}
   return res.redirect(`/blog/${req.params._id}`);
 });
+//for liking comment
+router.route("/like/:id/:userid/:blogid").get(async(req,res,next)=>{
+  const comment = await Comment.findById(req.params.id);
+  //console.log(comment);
+  
+  const userId = req.params.userid;
+  
+  // Check if the user has already liked the comment
+  const alreadyLiked = comment.liked.includes(userId);
+  
+  // Check if the user has disliked the comment earlier
+  const alreadyDisliked = comment.disliked.includes(userId);
+  
+  // If the user has already liked, do nothing
+  if (alreadyLiked) {
+    return res.redirect(`/blog/${req.params.blogid}`)
+  }
+  
+  // If the user has disliked earlier, remove from disliked and push to liked
+  if (alreadyDisliked) {
+    comment.disliked.pull(userId);
+    comment.liked.push(userId);
+  } else {
+    // If the user has not liked or disliked, push to liked
+    comment.liked.push(userId);
+  }
+  
+  // Now save the updated comment
+  try {
+    await comment.save({validateBeforeSave:false});
+  
+    // Handle success, send response, etc.
+    return res.redirect(`/blog/${req.params.blogid}`)
+    
+  } catch (error) {
+    // Handle the error, send an error response, log, etc.
+    console.error("Error updating like status:", error.message);
+    return res.redirect("/");
+  }
+})
+router.route("/dislike/:id/:userid/:blogid").get(async(req,res,next)=>{
+  const comment = await Comment.findById(req.params.id);
+  //console.log(comment);
+  
+  const userId = req.params.userid;
+  
+  // Check if the user has already disliked the comment
+  const alreadydisLiked = comment.disliked.includes(userId);
+  
+  // Check if the user has liked the comment earlier
+  const alreadyliked = comment.liked.includes(userId);
+  
+  // If the user has already liked, do nothing
+  if (alreadydisLiked) {
+    return res.redirect(`/blog/${req.params.blogid}`)
+  }
+  
+  // If the user has disliked earlier, remove from disliked and push to liked
+  if (alreadyliked) {
+    comment.liked.pull(userId);
+    comment.disliked.push(userId);
+  } else {
+    // If the user has not liked or disliked, push to liked
+    comment.disliked.push(userId);
+  }
+  
+  // Now save the updated comment
+  try {
+    await comment.save({validateBeforeSave:false});
+  
+    // Handle success, send response, etc.
+    return res.redirect(`/blog/${req.params.blogid}`)
+    
+  } catch (error) {
+    // Handle the error, send an error response, log, etc.
+    console.error("Error updating like status:", error.message);
+    return res.redirect("/");
+  }
+})
 export default router;

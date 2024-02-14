@@ -77,14 +77,22 @@
         </div>
         <div
           class=""
-          style="display: flex; width: 100%; justify-content: space-between"
+          style="display: flex; width: 100%; justify-content: space-between;
+          flex-direction: column;"
         >
           <pre><%= comment.content %></pre>
+          <div class="" style="display: flex;justify-content: space-between; width: 100%;">
+            <% if (locals.user) { %>
+           <ul style="display: flex; gap: 10px;" >
+          
+            <li style="list-style: none;"><a href="/blog/like/<%= comment._id %>/<%= user._id %>/<%= blog._id %>" style="text-decoration: none;">👍 </a><%= comment.liked?comment.liked.length:0     %></li>
+            <li style="list-style:  none;"><a style="text-decoration: none;" href="/blog/dislike/<%= comment._id %>/<%= user._id %>/<%= blog._id %>">👎 </a> <%=comment.disliked?comment.disliked.length:0  %></li></ul>
 
-          <div class="" style="display: flex; gap: 4px">
-            <li style="list-style: none;"><a href="" style="text-decoration: none;">👍</a></li>
-            <li style="list-style:  none;"><a style="text-decoration: none;" href="">👎</a></li>
+           <% if (user.role==="ADMIN"||(user._id == comment.createdBy._id)) { %>
             <li style="list-style:none ;"><a  style="text-decoration: none;" href="">❌</a></li>
+           <% } %>
+           <% } %>
+        
           </div>
         </div>
         <% }) %>
