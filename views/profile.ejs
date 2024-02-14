@@ -76,7 +76,11 @@
             <h5 class="card-title" style="text-align: center">
               <%= card.title %>
             </h5>
-            <a href="/blog/<%= card._id %>" class="btn btn-primary">View</a>
+            <div class="div" style="display: flex; justify-content: space-between;">
+              <a href="/blog/<%= card._id %>" class="btn btn-primary" style="width: 80%;">View </a>
+             
+              <span>👁️ <%= card.views %></span>
+            </div>
           </div>
         </div>
         <% }) %>

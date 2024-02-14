@@ -65,6 +65,8 @@ router
 router.route("/:id").get(async (req, res, next) => {
   try {
     const blogs = await Blog.findById(req.params.id).populate("createdBy");
+    blogs.views+=1;
+    await blogs.save({validateBeforeSave:false})
     const comment = await Comment.find({ blogId: req.params.id }).populate(
       "createdBy"
     );
